@@ -1,0 +1,84 @@
+{
+    "name": "{{ cookiecutter.project_name }}",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "mounts": [
+        "source=/Users/olirafa/.zshrc,target=/root/.zshrc,type=bind",
+        "source=/Users/olirafa/.oh-my-zsh,target=/root/.oh-my-zsh,type=bind",
+        "source=/Users/olirafa/.p10k.zsh,target=/root/.p10k.zsh,type=bind",
+        "source=/Users/olirafa/.ssh,target=/root/.ssh,type=bind"
+        {%- if cookiecutter.use_docker_inside_container == "y" -%}
+        ,
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+        {% else %}
+        {% endif -%}
+    ],
+    "settings": {
+        {% if cookiecutter.use_sqltools == "y" -%}
+        "sqltools.useNodeRuntime": true,
+        {% endif -%}
+        "editor.bracketPairColorization.enabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.nosetestsEnabled": false,
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": [
+            "tests"
+        ],
+        "python.formatting.provider": "black",
+        "[python]": {
+            "editor.codeActionsOnSave": {
+                "source.organizeImports": true
+            }
+        },
+        "python.linting.flake8Enabled": false,
+        "python.linting.pylintEnabled": false,
+        "python.linting.pylamaEnabled": true,
+        "python.linting.enabled": true,
+        "editor.formatOnSave": true,
+        "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
+        "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
+        "python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
+        "python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
+        "python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
+        "python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
+        "python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
+        "python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
+        "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
+        "python.linting.pylamaPath": "/usr/local/bin/pylama",
+        "python.testing.pytestPath": "/usr/local/bin/pytest"
+    },
+    "extensions": [
+        "ms-python.python",
+        "editorconfig.editorconfig",
+        "piotrpalarz.vscode-gitignore-generator",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "magicstack.magicpython",
+        "yzhang.markdown-all-in-one",
+        "vscodevim.vim",
+        "andyyaldoo.vscode-json",
+        "redhat.vscode-yaml",
+        "bungcip.better-toml",
+        "xshrim.txt-syntax",
+        "ms-python.vscode-pylance",
+        {% if cookiecutter.use_sqltools == "y" -%}
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-sqlite"
+        {% endif -%}
+    ],
+    {% if cookiecutter.use_src_folder_structure == "y" -%}
+    "containerEnv": {
+        "PYTHONPATH": "./src"
+    },
+    {% endif -%}
+    {% if cookiecutter.ports_to_forward != "0" -%}
+    "forwardPorts": [
+        {{ cookiecutter.ports_to_forward }}
+    ],
+    {% endif -%}
+    "postCreateCommand": "poetry install"
+}

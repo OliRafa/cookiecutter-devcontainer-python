@@ -1,0 +1,9 @@
+{
+    "project_slug": ".devcontainer",
+    "project_name": "<name>",
+    "python_version": 3.9,
+    "use_docker_inside_container": "y",
+    "ports_to_forward": 0,
+    "use_src_folder_structure": "y",
+    "use_sqltools": "n"
+}
